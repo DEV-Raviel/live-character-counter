@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Character Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            max-width: 600px;
+        }
+
+        /* Styling the textarea */
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        /* Moves the counter to the right under the textbox */
+        .counter-container {
+            text-align: right;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* Displays A-Z as a clean vertical list */
+        .letter-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        /* Base list item style for each letter */
+        .letter-item {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        /* Highlight style applied when letter count > 0 */
+        .active {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Live Character Counter</h1>
+    <strong>Enter your message</strong>
+    <textarea id="messageInput" maxlength="150" oninput="updateCounter()"></textarea>
+
+    <!-- Right-aligned counter under the text box -->
+    <div class="counter-container">
+        <span id="charCount">0/150</span>
+    </div>
+
+    <h3>Letter Counter (A-Z)</h3>
+
+    <!-- List container where JavaScript builds the A-Z items -->
+    <ul id="alphabetList" class="letter-list"></ul>
+
+    <script>
+        // 1. Array of all 26 letters
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+        // 2. Build the A-Z list items inside the page when it first loads
+        const alphabetList = document.getElementById("alphabetList");
+        for (let i = 0; i < alphabet.length; i++) {
+            let letter = alphabet[i];
+            // Create a list item for each letter
+            alphabetList.innerHTML += `
+                <li class="letter-item" id="box-${letter}">
+                    ${letter} - <span id="count-${letter}">0</span>
+                </li>
+            `;
+        }
+
+        // 3. Function that runs every time you type in the text box
+        function updateCounter() {
+            // Get text from the textarea
+            let text = document.getElementById("messageInput").value;
+
+            // Update main counter (e.g., 5/150)
+            document.getElementById("charCount").innerText = text.length + "/150";
+
+            // Convert text to uppercase so lowercase and uppercase count together
+            let upperText = text.toUpperCase();
+
+            // Loop through each letter A-Z and count occurrences
+            for (let i = 0; i < alphabet.length; i++) {
+                let letter = alphabet[i];
+
+                // Counts occurrences of 'letter' in 'upperText'
+                let count = upperText.split(letter).length - 1;
+
+                // Update the count number on screen
+                document.getElementById("count-" + letter).innerText = count;
+
+                // Add highlight style if count > 0, remove if 0
+                let box = document.getElementById("box-" + letter);
+                if (count > 0) {
+                    box.className = "letter-item active";
+                } else {
+                    box.className = "letter-item";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
